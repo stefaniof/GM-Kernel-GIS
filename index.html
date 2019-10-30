@@ -1,0 +1,303 @@
+
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>GMKernel</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- CSS -->
+    <link href="css/main.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+	
+	<script src="http://maps.google.com/maps/api/js?key=AIzaSyB0H8dspgbLPY0ScNjtUU8D5rwMLanuI_s&libraries=drawing,geometry,places"></script>
+  </head>
+
+  <body>
+
+    <header>
+
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#"><i class="fas fa-globe fa-lg"></i>GMKernel</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle"><i class="fas fa-door-open fa-lg"></i>Panou Secundar</a>
+            </li>
+            <li class="nav-item dropdown">
+              <div class="btn-group">
+			  <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-map-marked-alt fa-lg"></i>Tip hartă</a>
+			  <div class="dropdown-menu">
+					<a class="dropdown-item" href="#" onclick="map.setMapTypeId(google.maps.MapTypeId.HYBRID)">Hibrid</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#" onclick="map.setMapTypeId(google.maps.MapTypeId.ROADMAP)">Rute</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#" onclick="map.setMapTypeId(google.maps.MapTypeId.SATELLITE)">Satelit</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#" onclick="map.setMapTypeId(google.maps.MapTypeId.TERRAIN)">Teren</a>
+			  </div> </div>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="DrawKernel(map)" data-toggle="tooltip" data-placement="bottom" title="Apasă acest buton după ce ai desenat un poligon." data-type="warning"><i class="fas fa-drafting-compass fa-lg"></i>Desenare nucleu</a>
+            </li>
+			<li class="nav-item">
+			<button type="button" class="colorpicker colorpickerK jscolor {valueElement:null, value:'000', onFineChange:'updateK(this)'} btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Alege o culoare pentru nucleu." data-type="info"></button>
+			</li>
+			<li class="nav-item dropdown">
+              <div class="btn-group">
+			  <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-map-marker-alt fa-lg"></i>Marcatoare</a>
+			  <div class="dropdown-menu">
+					<a class="dropdown-item" href="#" onclick="showMarkers()" data-toggle="tooltip" data-placement="right" title="Această acțiune va afișa toate marcatoarele existente." data-type="info">Afișare</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#" onclick="clearMarkers()" data-toggle="tooltip" data-placement="right" title="Această acțiune va ascunde toate marcatoarele." data-type="info">Ascundere</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#" onclick="deleteMarkers()" data-toggle="tooltip" data-placement="right" title="Acțiune ireversibilă! Se vor șterge toate marcatoarele existente." data-type="danger">Ștergere</a>
+			  </div> </div>
+            </li>
+
+			
+			
+			</ul>
+		  
+		  
+		 
+		 <button type="button" class="colorpicker jscolor {valueElement:null, value:'007cff', onFineChange:'update(this)'} btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Alege o culoare pentru poligon." data-type="info"></button>
+		 <a href="#" onclick="drawingManager.setDrawingMode(null)" data-toggle="tooltip" data-placement="bottom" title="Instrument navigare" data-type="info"> <i class="fas fa-hand-paper fa-lg"></i> </a>
+		 <a href="#" onclick="drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON)" data-toggle="tooltip" data-placement="bottom" title="Desenare poligon" data-type="info"> <i class="fas fa-draw-polygon fa-lg"></i> </a>
+		 <a href="#" onclick="deleteSelectedShape()" data-toggle="tooltip" data-placement="bottom" title="Șterge forma selectată." data-type="danger"> <i class="fas fa-trash-alt fa-lg"></i> </a>
+		 <a href="#" onclick="clearMap()" data-toggle="tooltip" data-placement="bottom" title="Șterge toate formele și toți marcatorii de pe hartă." data-type="danger"> <i class="fas fa-chalkboard fa-lg"></i> </a>
+		 
+
+		
+		<div class="searchContainer">
+		  <i class="fa fa-search searchIcon bg-primary"></i>
+		  <input class="searchBox" id="search-box" type="search" name="search" placeholder="Căutare loc...">
+		</div>
+		
+		
+		
+		</div> 
+		  
+		  
+	  </nav>
+    </header>
+
+    
+	<div id="map"></div>
+	
+	<div class="container">
+
+	  
+	    <div id="wrapper">
+			<div id="sidebar-wrapper">
+				<ul class="sidebar-nav">
+					<li>
+						<a href="#" data-toggle="modal" data-target="#info-aplicatie">
+							<i class="fas fa-info-circle fa-lg"></i> Informații aplicație
+						</a>
+					</li>
+					<li>
+						<a href="#" data-toggle="modal" data-target="#instructiuni-utilizare"><i class="fas fa-chalkboard-teacher fa-lg"></i> Instrucțiuni de utilizare</a>
+					</li>
+					<li>
+						<a href="#" data-toggle="modal" data-target="#teorie-nucleu"> <i class="fas fa-graduation-cap fa-lg"></i> Teorie nucleu</a>
+					</li>
+
+					<li>
+						
+						
+					
+					</li>
+					
+					<li>
+						<div id="opcard" class="card ccard bg-light" onmouseover="changeOpacityHover()" onmouseout="changeOpacityOut()">
+						  <div class="card-header container">
+							<div class="row">
+							  <div class="col-9">
+								<h6 class="card-title text-right">  Coordonate vârfuri poligon  <small><span id="copytext1" class="text-right text-success"> </span></small></h6>
+								
+							  </div>
+							  
+							  <div class="col-1">
+							  <button type="button"  class="btn btn-primary" onclick="copyToClipboard(document.getElementById('info').innerHTML, document.getElementById('copytext1'))" data-toggle="tooltip" data-placement="bottom" title="Copiază informațiile în clipboard." data-type="info"><i class="fas fa-copy fa-sm"></i></button> 
+							  </div>
+							</div>
+						  </div>
+						  <div class="card-body">
+							
+							<p class="card-text" id="info">Desenează un poligon. Aici vor apărea coordonatele vârfurilor sale și vor fi actualizate în timp real.</p>
+						  </div>
+						</div>	
+					</li>
+
+				</ul>
+				
+				
+			</div>
+			
+			<!-- Modals -->
+			<!-- Pentru butonul "Desenare nucleu" -->
+			<div class="modal fade" id="kernel" tabindex="-1" role="dialog" aria-labelledby="warning-kernel" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				<div class="modal-content">
+				  <div class="modal-header bg-warning">
+					<h5 class="modal-title" id="warning-kernel">Atenție!</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					Desenează mai întâi un poligon. Este simplu! Dacă nu te descurci, deschide panoul secundar și citește instrucțiunile de utilizare. Succes! 
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-dark" data-dismiss="modal">Închide</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			
+			<!-- Pentru butonul "Clear Map" -->
+			<div class="modal fade" id="clearmap" tabindex="-1" role="dialog" aria-labelledby="danger-clearall" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				<div class="modal-content">
+				  <div class="modal-header bg-danger">
+					<h5 class="modal-title" id="danger-clearall">Atenție!</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					Această acțiune va șterge toate formele existente, resetând harta la stadiul inițial. Ești sigur că vrei să ștergi tot? 
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-danger" id="yes">Șterge tot</button>
+					<button type="button" class="btn btn-success" data-dismiss="modal">Închide</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			
+			<!-- Info aplicatie -->
+			<div class="modal fade" id="info-aplicatie" tabindex="-1" role="dialog" aria-labelledby="info-aplicatie-titlu" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h5 class="modal-title" id="info-aplicatie-titlu">Informații despre aplicație</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					<p>Această aplicație a fost realizată ca parte aplicativă a lucrării de licență cu titlul "Calcularea nucleului unui poligon simplu. Algoritm, optimizări, implementare,
+					aplicații", elaborată de către absolventul Farmatu Ștefan-Ioan, sub coordonarea domnului conf. dr. Sorin Stupariu, în cadrul programului de studii de licență la Facultatea de Matematică și Informatică, specializarea Informatică, forma de învățământ ID, de la Universitatea din București. </p>
+					<p>Având în vedere tema prezentei lucrări, obiectivul general este realizarea unei aplicații care să permită demonstrarea conceptului de „nucleu” al unui poligon dat.
+					Pentru îndeplinirea obiectivului general, autorul și-a propus realizarea unei aplicații care să calculeze nucleul unui poligon determinat de vârfuri cu coordonate GPS de tip (latitudine, longitudine). Astfel, poligonul dat va delimita o zonă geografică, iar nucleul său (dacă există) va reprezenta o porțiune din acea zonă de unde va fi vizibilă întreaga suprafață a poligonului. De aceea, făcând abstracție de obstacolele din teren si de eventualele diferențe de altitudine, porțiunea determinată de nucleu este optimă pentru amplasarea unor elemente de supraveghere. </p>
+					<p>O astfel de aplicație își are utilitatea îndeosebi în domeniul militar, pentru determinarea amplasării optime a unor sisteme de supraveghere sau a unor sisteme defensive de tip <a href="https://en.wikipedia.org/wiki/Counter_Rocket,_Artillery,_and_Mortar">C-RAM</a>.
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-dark" data-dismiss="modal">Închide</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<!-- Instructiuni de utilizare -->
+			<div class="modal fade" id="instructiuni-utilizare" tabindex="-1" role="dialog" aria-labelledby="instructiuni-utilizare-titlu" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h5 class="modal-title" id="instructiuni-utilizare-titlu">Instrucțiuni de utilizare a aplicației</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					<p>Structura interfeței este dată de trei elemente principale (antet, conținut și subsol), vizibile în permanență, și unul secundar (un panou poziționat în partea stângă a paginii, care poate fi afișat și ascuns prin acționarea unui buton). </p>
+					<p>În antet este poziționat meniul principal, care conține controalele esențiale pentru funcționarea aplicației. În partea stângă este vizibil titlul aplicației, urmat de butonul care acționează panoul secundar și de un meniu derulant, care îi permite utilizatorului să selecteze diferite moduri de vizualizare a hărții: rutier, teren, satelit și hibrid. În partea dreaptă sunt dispuse butoanele necesare utilizatorului pentru a interacționa cu harta și a desena pe aceasta. </p>
+					<p>Harta interactivă Google ocupă tot spațiul central al interfeței. Aspectul și funcționalitatea acesteia sunt personalizate cu Javascript și CSS. Utilizatorul poate interacționa cu această hartă, având posibilitatea de a o centra în orice zonă de pe glob, de a-i mări sau micșora scara. Pentru a centra harta, utilizatorul o poate face manual sau poate căuta locul dorit. Utilizând controalele din meniul principal, utilizatorul poate desena pe hartă un poligon, pe care îl poate apoi redimensiona, reconfigura și repoziționa. După calcularea și afișarea nucleului poligonului selectat, utilizatorul poate vedea vârfurile nucleului și coordonatele acestora.</p>
+					<p>Panoul secundar este inițial ascuns, oferindu-i utilizatorului posibilitatea de a alege dacă dorește să vadă informațiile pe care acesta le conține. Odată acționat butonul aferent, panoul secundar va fi afișat în partea stângă a ecranului, pe un fundal semi-transparent. Afișarea, respectiv ascunderea acestui panou, sunt realizate printr-o animație discretă, care contribuie la aspectul modern al interfeței. Elementele afișate pe acest panou sunt:</p>
+					<ul class="list-group">
+					  <li class="list-group-item">-	un meniu secundar, care conține butoane pentru afișarea unor ecrane cu informații despre aplicație, instrucțiuni de utilizare și coordonatele vârfurilor nucleului poligonului selectat.</li>
+					  <li class="list-group-item">-	lista coordonatelor vârfurilor poligonului selectat, care se actualizează în timp real, pe măsură ce utilizatorul face modificări în configurația poligonului.
+					</li>
+					</ul>
+					<p>În subsolul paginii sunt afișate informații cu privire la autorul și destinația aplicației.</p>
+					<p>Următoarea diagramă UML de activități sintetizează logica pașilor parcurși de către utilizator pentru a desena un poligon și a-i calcula nucleul utilizând aplicația GMKernel:
+					<img src="img/activity-uml.png" class="img-fluid" alt="Diagrama UML de activități">
+
+					
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-dark" data-dismiss="modal">Închide</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<!-- Info aplicatie -->
+			<div class="modal fade" id="teorie-nucleu" tabindex="-1" role="dialog" aria-labelledby="teorie-nucleu-titlu" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h5 class="modal-title" id="teorie-nucleu-titlu">Teorie nucleu</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					<p>Definiția 1: Un poligon este simplu (sau poligon Jordan) dacă nu există o pereche de laturi neconsecutive care să se intersecteze.</p>
+					<p>Definiția 2: Un poligon simplu este convex dacă interiorul său este o mulțime convexă (orice punct de pe segmentul care unește oricare pereche de vârfuri ale poligonului se află în interiorul poligonului). Un poligon care nu are această proprietate se numește concav.</p>
+					<p>Definiția 3: Un poligon simplu P se numește poligon stelat în cazul în care există un punct q care nu este exterior lui P, astfel încât pentru toate punctele p din P, segmentul |qp| se află în întregime în P</p>
+					<div align="center"><img src="img/poligon-stelat.jpg" class="img-fluid" alt="nuclee"></div>
+					<p class="text-center"><small>Poligon stelat</small></p>
+					<p>Definiția 4: Nucleul K(P) al unui poligon simplu P este locul geometric al punctelor interioare lui P care îndeplinesc proprietatea specificată în cadrul definiției 3.</p>
+					<img src="img/nuclee.jpg" class="img-fluid" alt="nuclee">
+					<p class="text-center"><small>Poligoane cu nuclee (în negru): (a) poligon convex; (b) (c) poligoane stelate neconvexe; (d) poligon care nu este stelat</small></p>
+					<p>Definiția 5: Două puncte p1 și p2 sunt vizibile (reciproc) daca p1p2 nu intersectează niciun segment.</p>
+					
+					
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-dark" data-dismiss="modal">Închide</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<!-- Terminat modals -->
+        </div>
+
+
+	  
+	  
+	  
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <span class="text-muted"><i class="fas fa-user-graduate"></i> Farmatu Ștefan-Ioan - Lucrare de Licență 2018 - Facultatea de Matematică și Informatică - Universitatea din București <i class="fas fa-university"></i></span>
+      </div>
+    </footer>
+
+
+    <!-- Inserare javascript -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<script src="js/main.js"></script>
+	<script src="js/jscolor.js"></script>
+	<script src="js/nucleu.js"></script>
+	
+  </body>
+</html>
